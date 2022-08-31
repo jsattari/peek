@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-import argparse
+# import argparse
 import csv
-from rich import *
+# from rich import *
 import pathlib
 
 
@@ -19,10 +19,11 @@ def data_filter(data: list, field: str, filter_value: str) -> list:
     Return (list):              a list of dicts filtered by the desired value
     """
 
-    return [dictionary for dictionary in data if dictionary[field] == filter_value]
+    return [
+        dictionary for dictionary in data if dictionary[field] == filter_value]
 
 
-def list_of_units(data: list) -> list:
+def list_of_fields(data: list) -> list:
     """
     Provides a list of available fields within a csv
 
@@ -43,4 +44,4 @@ with open(file_to_open, "r") as file:
     reader = csv.DictReader(file)
     data_dict = [{key: value for key, value in row.items()} for row in reader]
 
-print(list_of_units(data_dict))
+print(list_of_fields(data_dict))
