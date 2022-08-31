@@ -3,8 +3,8 @@
 
 # import argparse
 import csv
-# from rich import *
 import pathlib
+from rich import print
 
 
 def data_filter(data: list, field: str, filter_value: str) -> list:
