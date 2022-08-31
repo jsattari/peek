@@ -4,7 +4,7 @@
 # import argparse
 import csv
 import pathlib
-from rich import print
+import console
 
 
 def data_filter(data: list, field: str, filter_value: str) -> list:
@@ -20,7 +20,8 @@ def data_filter(data: list, field: str, filter_value: str) -> list:
     """
 
     return [
-        dictionary for dictionary in data if dictionary[field] == filter_value]
+        dictionary for dictionary in data
+        if dictionary[field] == filter_value.capitalize()]
 
 
 def list_of_fields(data: list) -> list:
@@ -36,12 +37,19 @@ def list_of_fields(data: list) -> list:
     return [key for key in data[0].keys()]
 
 
-file_path = pathlib.Path("peek-app")
+def main():
 
-file_to_open = file_path / "cups.csv"
+    file_path = pathlib.Path("peek-app")
 
-with open(file_to_open, "r") as file:
-    reader = csv.DictReader(file)
-    data_dict = [{key: value for key, value in row.items()} for row in reader]
+    file_to_open = file_path / "cups.csv"
 
-print(list_of_fields(data_dict))
+    with open(file_to_open, "r") as file:
+        reader = csv.DictReader(file)
+        data_dict = [{key: value for key, value in row.items()}
+                     for row in reader]
+
+    console.make_table(data_filter(data_dict, "host", "england"))
+
+
+if __name__ == "__main__":
+    main()
