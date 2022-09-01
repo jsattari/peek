@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-# import argparse
+import argparse
 import csv
 import pathlib
 import console
 
 
-def data_filter(data: list, field: str, filter_value: str) -> list:
+def data_filter(data: list, values: list) -> list:
     """
     Filter data by choice of field and desired value
 
@@ -21,7 +21,7 @@ def data_filter(data: list, field: str, filter_value: str) -> list:
 
     return [
         dictionary for dictionary in data
-        if dictionary[field] == filter_value.capitalize()]
+        if dictionary[values[0]] == values[1].capitalize()]
 
 
 def list_of_fields(data: list) -> list:
@@ -48,7 +48,36 @@ def main():
         data_dict = [{key: value for key, value in row.items()}
                      for row in reader]
 
-    console.make_table(data_filter(data_dict, "host", "england"))
+    # function map for flags
+    FUNCTION_MAP = {
+        "search": data_filter,
+        "list": list_of_fields
+    }
+
+    # create parser object
+    parser = argparse.ArgumentParser()
+
+    # add arguments
+    parser.add_argument(
+        "-s", "--search",
+        type=str,
+        nargs=2,
+        help="Search for matching results based on field and value")
+
+    parser.add_argument(
+        "-l", "--list",
+        nargs=0,
+        help="Returns list of fields available for filtration"
+    )
+
+    args = parser.parse_args()
+    fields = list(vars(args).values())[0]
+    flags = list(vars(args).keys())[0]
+
+    func = FUNCTION_MAP[flags]
+    # print(func(data_dict, fields))
+
+    console.make_table(func(data_dict, fields))
 
 
 if __name__ == "__main__":
