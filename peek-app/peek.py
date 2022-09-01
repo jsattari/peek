@@ -39,6 +39,12 @@ def list_of_fields(data: list) -> list:
 
 def main():
 
+    # function map for flags
+    FUNCTION_MAP = {
+        "search": data_filter,
+        "list": list_of_fields
+    }
+
     file_path = pathlib.Path("peek-app")
 
     file_to_open = file_path / "cups.csv"
@@ -48,36 +54,37 @@ def main():
         data_dict = [{key: value for key, value in row.items()}
                      for row in reader]
 
-    # function map for flags
-    FUNCTION_MAP = {
-        "search": data_filter,
-        "list": list_of_fields
-    }
-
     # create parser object
     parser = argparse.ArgumentParser()
 
-    # add arguments
     parser.add_argument(
         "-s", "--search",
-        type=str,
         nargs=2,
+        dest="search",
         help="Search for matching results based on field and value")
 
     parser.add_argument(
         "-l", "--list",
-        nargs=0,
+        dest="list",
+        action="store_true",
         help="Returns list of fields available for filtration"
     )
 
+    # gather arguments and flags into variables
     args = parser.parse_args()
-    fields = list(vars(args).values())[0]
-    flags = list(vars(args).keys())[0]
+    commands = [tup for tup in list(
+        vars(args).items()) if tup[1] is not None][0]
+    flags = commands[0]
+    fields = commands[1]
 
+    # map function based on flags applied in console
     func = FUNCTION_MAP[flags]
-    # print(func(data_dict, fields))
 
-    console.make_table(func(data_dict, fields))
+    # pretty print out data that is returned
+    if isinstance(commands[1], bool):
+        console.make_table(func(data_dict))
+    else:
+        console.make_table(func(data_dict, fields))
 
 
 if __name__ == "__main__":
