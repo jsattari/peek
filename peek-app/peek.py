@@ -37,26 +37,19 @@ def list_of_fields(data: list) -> list:
     return [key for key in data[0].keys()]
 
 
-def main():
+def get_args():
+    """
+    Parse console args and return three variables
+    that contain commands, flags, and additional args
 
-    # function map for flags
-    FUNCTION_MAP = {
-        "search": data_filter,
-        "list": list_of_fields
-    }
+    Values:
+        None:           Accepts inputs and returns values
 
-    file_path = pathlib.Path("peek-app")
-
-    file_to_open = file_path / "cups.csv"
-
-    with open(file_to_open, "r") as file:
-        reader = csv.DictReader(file)
-        data_dict = [{key: value for key, value in row.items()}
-                     for row in reader]
+    Return (list):      Three variables that
+    """
 
     # create parser object
     parser = argparse.ArgumentParser()
-
     parser.add_argument(
         "-s", "--search",
         nargs=2,
@@ -76,6 +69,29 @@ def main():
         vars(args).items()) if tup[1] is not None][0]
     flags = commands[0]
     fields = commands[1]
+
+    return commands, flags, fields
+
+
+def main():
+
+    # function map for flags
+    FUNCTION_MAP = {
+        "search": data_filter,
+        "list": list_of_fields
+    }
+
+    file_path = pathlib.Path("peek-app")
+
+    file_to_open = file_path / "cups.csv"
+
+    with open(file_to_open, "r") as file:
+        reader = csv.DictReader(file)
+        data_dict = [{key: value for key, value in row.items()}
+                     for row in reader]
+
+    # get arguments
+    commands, flags, fields = get_args()
 
     # map function based on flags applied in console
     func = FUNCTION_MAP[flags]
