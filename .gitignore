@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 # file types
-/Users/johnsattari/peek/cups.csv
+*.csv
