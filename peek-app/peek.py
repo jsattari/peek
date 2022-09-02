@@ -3,11 +3,10 @@
 
 import argparse
 import csv
-import pathlib
 import console
 
 
-def data_filter(data: list, values: list) -> list:
+def search(data: list, values: list) -> list:
     """
     Filter data by choice of field and desired value
 
@@ -79,6 +78,12 @@ def get_args():
 
     # func for search
     parser.add_argument(
+        "-f", "--filepath",
+        required=True,
+        dest="filepath",
+        help="filepath of dataset")
+
+    parser.add_argument(
         "-s", "--search",
         nargs=2,
         dest="search",
@@ -103,7 +108,7 @@ def get_args():
         help="Shows preview of first 5 rows of dataset"
     )
 
-    #
+    # func for tail of data
     parser.add_argument(
         "-t", "--tail",
         dest="tail",
@@ -114,35 +119,33 @@ def get_args():
 
     # gather arguments and flags into variables
     args = parser.parse_args()
+    data = args.filepath
     commands = [tup for tup in list(
-        vars(args).items()) if tup[1] is not False][0]
+        vars(args).items())[1:] if tup[1] is not False][0]
     flags = commands[0]
     fields = commands[1]
 
-    return commands, flags, fields
+    return data, commands, flags, fields
 
 
 def main():
 
     # function map for flags
     FUNCTION_MAP = {
-        "search": data_filter,
+        "search": search,
         "list": list_of_fields,
         "head": head,
         "tail": tail
     }
 
-    file_path = pathlib.Path("peek-app")
+    # get arguments
+    data, commands, flags, fields = get_args()
 
-    file_to_open = file_path / "cups.csv"
-
-    with open(file_to_open, "r") as file:
+    # open file
+    with open(data, "r") as file:
         reader = csv.DictReader(file)
         data_dict = [{key: value for key, value in row.items()}
                      for row in reader]
-
-    # get arguments
-    commands, flags, fields = get_args()
 
     # map function based on flags applied in console
     func = FUNCTION_MAP[flags]
