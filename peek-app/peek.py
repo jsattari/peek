@@ -37,6 +37,19 @@ def list_of_fields(data: list) -> list:
     return [key for key in data[0].keys()]
 
 
+def head(data: list) -> list:
+    """
+    Returns the first 5 or last 5 rows of data as a preview
+
+    Values:
+        data (list):        dataset for preview
+
+    Return (list):          list of first 5 rows of dataset
+    """
+
+    return data[:5]
+
+
 def get_args():
     """
     Parse console args and return three variables
@@ -54,19 +67,29 @@ def get_args():
         "-s", "--search",
         nargs=2,
         dest="search",
+        default=False,
         help="Search for matching results based on field and value")
 
     parser.add_argument(
         "-l", "--list",
         dest="list",
         action="store_true",
+        default=False,
         help="Returns list of fields available for filtration"
+    )
+
+    parser.add_argument(
+        "-hd", "--head",
+        dest="head",
+        action="store_true",
+        default=False,
+        help="Shows preview of first 5 rows of dataset"
     )
 
     # gather arguments and flags into variables
     args = parser.parse_args()
     commands = [tup for tup in list(
-        vars(args).items()) if tup[1] is not None][0]
+        vars(args).items()) if tup[1] is not False][0]
     flags = commands[0]
     fields = commands[1]
 
@@ -78,7 +101,8 @@ def main():
     # function map for flags
     FUNCTION_MAP = {
         "search": data_filter,
-        "list": list_of_fields
+        "list": list_of_fields,
+        "head": head
     }
 
     file_path = pathlib.Path("peek-app")
