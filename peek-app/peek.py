@@ -50,6 +50,19 @@ def head(data: list) -> list:
     return data[:5]
 
 
+def tail(data: list) -> list:
+    """
+    Returns the first 5 or last 5 rows of data as a preview
+
+    Values:
+        data (list):        dataset for preview
+
+    Return (list):          list of first 5 rows of dataset
+    """
+
+    return data[-5:]
+
+
 def get_args():
     """
     Parse console args and return three variables
@@ -63,6 +76,8 @@ def get_args():
 
     # create parser object
     parser = argparse.ArgumentParser()
+
+    # func for search
     parser.add_argument(
         "-s", "--search",
         nargs=2,
@@ -70,6 +85,7 @@ def get_args():
         default=False,
         help="Search for matching results based on field and value")
 
+    # func for listing fields
     parser.add_argument(
         "-l", "--list",
         dest="list",
@@ -78,12 +94,22 @@ def get_args():
         help="Returns list of fields available for filtration"
     )
 
+    # func for head of data
     parser.add_argument(
         "-hd", "--head",
         dest="head",
         action="store_true",
         default=False,
         help="Shows preview of first 5 rows of dataset"
+    )
+
+    #
+    parser.add_argument(
+        "-t", "--tail",
+        dest="tail",
+        action="store_true",
+        default=False,
+        help="Shows preview of last 5 rows of dataset"
     )
 
     # gather arguments and flags into variables
@@ -102,7 +128,8 @@ def main():
     FUNCTION_MAP = {
         "search": data_filter,
         "list": list_of_fields,
-        "head": head
+        "head": head,
+        "tail": tail
     }
 
     file_path = pathlib.Path("peek-app")
