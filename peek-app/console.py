@@ -20,15 +20,18 @@ def make_table(data: list) -> object:
         console.print(table)
 
     elif isinstance(data[0], Dict):
-        for dict in data:
+        table = Table(show_edge=True, show_header=True,
+                      show_lines=True, header_style="bold")
 
-            table = Table()
-            table.add_column("field")
-            table.add_column("values")
+        for col in list(data[0].keys()):
+            table.add_column(col, style="green",
+                             justify="right", no_wrap=False,
+                             min_width=10)
 
-            for key, value in dict.items():
-                table.add_row(key, value, style="red")
-            console.print(table)
+        for blob in data:
+            table.add_row(*blob.values(), style="red")
+
+        console.print(table)
 
     else:
         raise Exception("Incorrect data type applied")
