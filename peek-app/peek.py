@@ -2,22 +2,22 @@
 # -*- coding:utf-8 -*-
 
 import csv
-import console
-import functions as f
+import console as con
+import functions as funcs
 
 
 def main():
 
     # function map for flags
     FUNCTION_MAP = {
-        "search": f.search,
-        "list": f.list_of_fields,
-        "head": f.head,
-        "tail": f.tail
+        "search": funcs.search,
+        "list": funcs.list_of_fields,
+        "head": funcs.head,
+        "tail": funcs.tail
     }
 
     # get arguments
-    data, commands, flags, fields = f.get_args()
+    data, commands, flags, fields = funcs.get_args()
 
     # open file
     with open(data, "r") as file:
@@ -30,9 +30,9 @@ def main():
 
     # pretty print out data that is returned
     if isinstance(commands[1], bool):
-        console.make_table(func(data_dict))
+        con.make_table(func(data_dict))
     else:
-        console.make_table(func(data_dict, fields))
+        con.make_table(func(data_dict, fields))
 
 
 if __name__ == "__main__":
