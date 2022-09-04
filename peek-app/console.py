@@ -12,9 +12,11 @@ def make_table(data: list) -> object:
     if len(data) < 1:
         raise Exception("No data available")
 
-    elif isinstance(data, str):
-        text = Text(data)
-        text.stylize("bold", 0, 6)
+    elif data[0] == -1:
+        text = Text(
+            "MissingValue: The field or filter value"
+            " is not present within the dataset")
+        text.stylize("bold", 0, 12)
         text.stylize("red")
         console.print(text)
 

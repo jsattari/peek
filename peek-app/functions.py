@@ -23,13 +23,12 @@ def search(*args) -> list:
                 output.append(struct)
 
         if len(output) == 0:
-            return "LookupError: One of either the field value or \
-                filter value is not present within the dataset"
+            return [-1]
 
         else:
             return output
     except Exception:
-        print("Error: Unable to complete action")
+        return "Error: Unable to complete action"
 
 
 def list_of_fields(*args) -> list:
