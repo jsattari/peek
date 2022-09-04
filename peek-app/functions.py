@@ -16,9 +16,20 @@ def search(*args) -> list:
     Return (list):              a list of dicts filtered by the desired value
     """
 
-    return [
-        dictionary for dictionary in args[0]
-        if dictionary[args[1][0]].lower() == args[1][1].lower()]
+    try:
+        output = []
+        for struct in args[0]:
+            if struct[args[1][0]].lower() == args[1][1].lower():
+                output.append(struct)
+
+        if len(output) == 0:
+            return "LookupError: One of either the field value or \
+                filter value is not present within the dataset"
+
+        else:
+            return output
+    except Exception:
+        print("Error: Unable to complete action")
 
 
 def list_of_fields(*args) -> list:

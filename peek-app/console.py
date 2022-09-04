@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-from typing import Dict
 from rich.console import Console
 from rich.table import Table
+from rich.text import Text
 
 console = Console()
 
@@ -12,6 +12,12 @@ def make_table(data: list) -> object:
     if len(data) < 1:
         raise Exception("No data available")
 
+    elif isinstance(data, str):
+        text = Text(data)
+        text.stylize("bold", 0, 6)
+        text.stylize("red")
+        console.print(text)
+
     elif isinstance(data[0], str):
         table = Table("List of fields available for search")
         for value in data:
@@ -19,7 +25,7 @@ def make_table(data: list) -> object:
 
         console.print(table)
 
-    elif isinstance(data[0], Dict):
+    elif isinstance(data[0], dict):
         table = Table(show_edge=True, show_header=True,
                       show_lines=True, header_style="bold")
 
