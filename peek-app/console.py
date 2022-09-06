@@ -3,24 +3,21 @@
 
 from rich.console import Console
 from rich.table import Table
-from rich.text import Text
 
 console = Console()
 
 
 def make_table(data: list) -> object:
-    if len(data) < 1:
-        raise Exception("No data available")
+    """
+    Receives result console inputs and prints out with stylized formatting
 
-    elif data[0] == -1:
-        text = Text(
-            "MissingValue: The field or filter value"
-            " is not present within the dataset")
-        text.stylize("bold", 0, 12)
-        text.stylize("red")
-        console.print(text)
+    Values:
+        data (list):            Result of commands
 
-    elif isinstance(data[0], str):
+    Return (object):            Pretty prints result from command
+    """
+
+    if isinstance(data[0], str):
         table = Table("List of fields available for search")
         for value in data:
             table.add_row(value, style="red")

@@ -2,6 +2,23 @@
 # -*- coding:utf-8 -*-
 
 import argparse
+import sys
+
+# remove traceback from errors
+sys.tracebacklimit = 0
+
+
+def list_of_fields(*args) -> list:
+    """
+    Provides a list of available fields within a csv
+
+    Values:
+        data (list):    dataset that will contain list of fields
+
+    Return (list):      a list of fields from dataset
+    """
+
+    return [key for key in args[0][0].keys()]
 
 
 def search(*args) -> list:
@@ -16,32 +33,24 @@ def search(*args) -> list:
     Return (list):              a list of dicts filtered by the desired value
     """
 
+    if args[1][0] not in list_of_fields(args[0]):
+        raise ValueError("Field value is not present in dataset")
+
+    output = []
+
     try:
-        output = []
         for struct in args[0]:
             if struct[args[1][0]].lower() == args[1][1].lower():
                 output.append(struct)
 
         if len(output) == 0:
-            return [-1]
+            raise ValueError(
+                "There is no value matching selected filter within dataset")
 
         else:
             return output
-    except Exception:
-        return "Error: Unable to complete action"
-
-
-def list_of_fields(*args) -> list:
-    """
-    Provides a list of available fields within a csv
-
-    Values:
-        data (list):    dataset that will contain list of fields
-
-    Return (list):      a list of fields from dataset
-    """
-
-    return [key for key in args[0][0].keys()]
+    except KeyError as error:
+        return error
 
 
 def head(*args) -> list:

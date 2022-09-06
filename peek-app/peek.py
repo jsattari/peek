@@ -30,9 +30,11 @@ def main():
 
     # pretty print out data that is returned
     if isinstance(commands[1], bool):
-        con.make_table(func(data_dict))
+        results = func(data_dict)
+        con.make_table(results)
     else:
-        con.make_table(func(data_dict, fields))
+        results = func(data_dict, fields)
+        con.make_table(results)
 
 
 if __name__ == "__main__":
