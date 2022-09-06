@@ -17,11 +17,9 @@ def list_of_fields(*args) -> list:
 
     Return (list):      a list of fields from dataset
     """
-    output = []
 
     try:
-        for key in args[0][0].keys():
-            output.append(key)
+        output = [key for key in args[0][0].keys()]
 
         if len(output) > 0:
             return output
@@ -49,12 +47,9 @@ def search(*args) -> list:
     if args[1][0] not in list_of_fields(args[0]):
         raise ValueError("Field value is not present in dataset")
 
-    output = []
-
     try:
-        for struct in args[0]:
-            if struct[args[1][0]].lower() == args[1][1].lower():
-                output.append(struct)
+        output = [struct for struct in args[0]
+                  if struct[args[1][0]].lower() == args[1][1].lower()]
 
         if len(output) == 0:
             raise ValueError(
@@ -68,7 +63,7 @@ def search(*args) -> list:
 
 def head(*args) -> list:
     """
-    Returns the first 5 or last 5 rows of data as a preview
+    Returns the first 5 rows of data as a preview
 
     Values:
         data (list):        dataset for preview
@@ -76,12 +71,16 @@ def head(*args) -> list:
     Return (list):          list of first 5 rows of dataset
     """
 
-    return args[0][:5]
+    try:
+        output = args[0][:5]
+        return output
+    except IndexError as error:
+        return error
 
 
 def tail(*args) -> list:
     """
-    Returns the first 5 or last 5 rows of data as a preview
+    Returns the last 5 rows of data as a preview
 
     Values:
         data (list):        dataset for preview
@@ -89,7 +88,11 @@ def tail(*args) -> list:
     Return (list):          list of first 5 rows of dataset
     """
 
-    return args[0][-5:]
+    try:
+        output = args[0][-5:]
+        return output
+    except IndexError as error:
+        return error
 
 
 def get_args():
