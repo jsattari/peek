@@ -17,8 +17,21 @@ def list_of_fields(*args) -> list:
 
     Return (list):      a list of fields from dataset
     """
+    output = []
 
-    return [key for key in args[0][0].keys()]
+    try:
+        for key in args[0][0].keys():
+            output.append(key)
+
+        if len(output) > 0:
+            return output
+
+        else:
+            raise RuntimeError(
+                "No header fields could be parsed within dataset")
+
+    except KeyError as error:
+        return error
 
 
 def search(*args) -> list:
