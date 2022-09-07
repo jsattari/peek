@@ -4,6 +4,7 @@
 import csv
 import console as con
 import functions as funcs
+import args
 
 
 def main():
@@ -17,7 +18,7 @@ def main():
     }
 
     # get arguments
-    data, commands, flags, fields = funcs.get_args()
+    data, commands, flags, fields = args.get_args()
 
     # open file
     with open(data, "r") as file:
