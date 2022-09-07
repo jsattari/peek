@@ -110,13 +110,14 @@ def get_args():
     # create parser object
     parser = argparse.ArgumentParser()
 
-    # func for search
+    # arg for filepath
     parser.add_argument(
         "-f", "--filepath",
         required=True,
         dest="filepath",
         help="filepath of dataset")
 
+    # func for search
     parser.add_argument(
         "-s", "--search",
         nargs=2,
