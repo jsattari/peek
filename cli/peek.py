@@ -4,7 +4,7 @@
 import csv
 import console as con
 import functions as funcs
-import args
+from args import create_parser, get_args
 
 
 def main():
@@ -17,8 +17,10 @@ def main():
         "tail": funcs.tail
     }
 
+    # create parser
     # get arguments
-    data, commands, flags, fields = args.get_args()
+    parser = create_parser()
+    data, flags, fields = get_args(parser)
 
     # open file
     with open(data, "r") as file:
@@ -30,7 +32,7 @@ def main():
     func = FUNCTION_MAP[flags]
 
     # pretty print out data that is returned
-    if isinstance(commands[1], bool):
+    if isinstance(fields, bool):
         results = func(data_dict)
         con.make_table(results)
     else:
