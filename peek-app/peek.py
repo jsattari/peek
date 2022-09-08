@@ -1,145 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-import argparse
 import csv
-import console
-
-
-def search(data: list, values: list) -> list:
-    """
-    Filter data by choice of field and desired value
-
-    Values:
-        data (list):            dataset that will be filtered
-        field (str):            field that will be used as basis for filtration
-        filter_value (str):     value that will be used as the filter
-
-    Return (list):              a list of dicts filtered by the desired value
-    """
-
-    return [
-        dictionary for dictionary in data
-        if dictionary[values[0]] == values[1].capitalize()]
-
-
-def list_of_fields(data: list) -> list:
-    """
-    Provides a list of available fields within a csv
-
-    Values:
-        data (list):    dataset that will contain list of fields
-
-    Return (list):      a list of fields from dataset
-    """
-
-    return [key for key in data[0].keys()]
-
-
-def head(data: list) -> list:
-    """
-    Returns the first 5 or last 5 rows of data as a preview
-
-    Values:
-        data (list):        dataset for preview
-
-    Return (list):          list of first 5 rows of dataset
-    """
-
-    return data[:5]
-
-
-def tail(data: list) -> list:
-    """
-    Returns the first 5 or last 5 rows of data as a preview
-
-    Values:
-        data (list):        dataset for preview
-
-    Return (list):          list of first 5 rows of dataset
-    """
-
-    return data[-5:]
-
-
-def get_args():
-    """
-    Parse console args and return three variables
-    that contain commands, flags, and additional args
-
-    Values:
-        None:           Accepts inputs and returns values
-
-    Return (list):      Three variables that
-    """
-
-    # create parser object
-    parser = argparse.ArgumentParser()
-
-    # func for search
-    parser.add_argument(
-        "-f", "--filepath",
-        required=True,
-        dest="filepath",
-        help="filepath of dataset")
-
-    parser.add_argument(
-        "-s", "--search",
-        nargs=2,
-        dest="search",
-        default=False,
-        help="Search for matching results based on field and value")
-
-    # func for listing fields
-    parser.add_argument(
-        "-l", "--list",
-        dest="list",
-        action="store_true",
-        default=False,
-        help="Returns list of fields available for filtration"
-    )
-
-    # func for head of data
-    parser.add_argument(
-        "-hd", "--head",
-        dest="head",
-        action="store_true",
-        default=False,
-        help="Shows preview of first 5 rows of dataset"
-    )
-
-    # func for tail of data
-    parser.add_argument(
-        "-t", "--tail",
-        dest="tail",
-        action="store_true",
-        default=False,
-        help="Shows preview of last 5 rows of dataset"
-    )
-
-    # gather arguments and flags into variables
-    args = parser.parse_args()
-    data = args.filepath
-    commands = [tup for tup in list(
-        vars(args).items())[1:] if tup[1] is not False][0]
-    flags = commands[0]
-    fields = commands[1]
-
-    return data, commands, flags, fields
+import console as con
+import functions as funcs
+import args
 
 
 def main():
 
     # function map for flags
     FUNCTION_MAP = {
-        "search": search,
-        "list": list_of_fields,
-        "head": head,
-        "tail": tail
+        "search": funcs.search,
+        "list": funcs.list_of_fields,
+        "head": funcs.head,
+        "tail": funcs.tail
     }
 
     # get arguments
-    data, commands, flags, fields = get_args()
+    data, commands, flags, fields = args.get_args()
 
     # open file
     with open(data, "r") as file:
@@ -152,9 +31,11 @@ def main():
 
     # pretty print out data that is returned
     if isinstance(commands[1], bool):
-        console.make_table(func(data_dict))
+        results = func(data_dict)
+        con.make_table(results)
     else:
-        console.make_table(func(data_dict, fields))
+        results = func(data_dict, fields)
+        con.make_table(results)
 
 
 if __name__ == "__main__":
