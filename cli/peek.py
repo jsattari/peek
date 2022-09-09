@@ -5,6 +5,10 @@ import csv
 import console as con
 import functions as funcs
 from args import create_parser, get_args
+import sys
+
+# remove traceback from errors
+sys.tracebacklimit = 0
 
 
 def main():
@@ -19,7 +23,7 @@ def main():
 
     # create parser
     # get arguments
-    parser = create_parser()
+    parser = create_parser(sys.argv[1:])
     data, flags, fields = get_args(parser)
 
     # open file

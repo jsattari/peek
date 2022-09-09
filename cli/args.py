@@ -1,7 +1,7 @@
 import argparse
 
 
-def create_parser():
+def create_parser(args):
     """
     Parse console args and return three variables
     that contain commands, flags, and additional args
@@ -58,7 +58,7 @@ def create_parser():
         help="Shows preview of last 5 rows of dataset"
     )
 
-    return parser.parse_args()
+    return parser.parse_args(args)
 
 
 def get_args(cli_args):
@@ -69,6 +69,10 @@ def get_args(cli_args):
     # find which flags are active
     commands = [tup for tup in list(
         vars(cli_args).items())[1:] if tup[1] is not False]
+
+    # if there are no commands, default to head
+    if not commands:
+        commands = [("head", True)]
 
     # separate flag and fields
     flags = commands[0][0]

@@ -1,11 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-import sys
-
-# remove traceback from errors
-sys.tracebacklimit = 0
-
 
 def list_of_fields(*args) -> list:
     """
