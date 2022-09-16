@@ -1,4 +1,13 @@
 from cli.args import create_parser, get_args
+from cli.functions import search
+import csv
+import pytest
+
+
+with open("/Users/johnsattari/peek/cups.csv", "r") as file:
+    reader = csv.DictReader(file)
+    data_dict = [{key: value for key, value in row.items()}
+                 for row in reader]
 
 
 def test_no_flags():
@@ -21,6 +30,22 @@ def test_search():
     [data, flags, fields] = get_args(parser)
     assert [data, flags, fields] == [
         "/Users/johnsattari/peek/cups.csv", "search", ["host", "france"]]
+
+
+def test_search_error():
+    parser = create_parser(
+        ["-f", "/Users/johnsattari/peek/cups.csv", "-s", "host", "jim"])
+    data, flags, fields = get_args(parser)
+    with pytest.raises(ValueError):
+        search(data_dict, flags, fields)
+
+
+def test_search_error2():
+    parser = create_parser(
+        ["-f", "/Users/johnsattari/peek/cups.csv", "-s", "cow", "jim"])
+    data, flags, fields = get_args(parser)
+    with pytest.raises(ValueError):
+        search(data_dict, flags, fields)
 
 
 def test_list():
