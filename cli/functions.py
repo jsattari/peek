@@ -2,6 +2,12 @@
 # -*- coding:utf-8 -*-
 
 
+import logging
+
+# logger object
+logger = logging.getLogger(__name__)
+
+
 def list_of_fields(*args) -> list:
     """
     Provides a list of available fields within a csv
@@ -19,11 +25,14 @@ def list_of_fields(*args) -> list:
             return output
 
         else:
-            raise RuntimeError(
+            logger.exception(
                 "No header fields could be parsed within dataset")
+            raise ValueError
 
-    except KeyError as error:
-        return error
+    except KeyError:
+        logger.exception(
+            "Something went wrong with loading the file for parsing")
+        raise KeyError
 
 
 def search(*args) -> list:
@@ -39,19 +48,21 @@ def search(*args) -> list:
     """
 
     if args[1][0] not in list_of_fields(args[0]):
-        raise ValueError("Field value is not present in dataset")
+        logger.exception("Field value is not present in dataset")
+        raise ValueError
 
     try:
         output = [struct for struct in args[0]
                   if struct[args[1][0]].lower() == args[1][1].lower()]
 
         if len(output) == 0:
-            raise ValueError(
+            return logger.exception(
                 "There is no value matching selected filter within dataset")
 
         else:
             return output
     except KeyError as error:
+        logger.exception("Something went wrong")
         return error
 
 
@@ -69,6 +80,7 @@ def head(*args) -> list:
         output = args[0][:5]
         return output
     except IndexError as error:
+        logger.exception("Insuffient data to be displayed")
         return error
 
 
@@ -86,4 +98,5 @@ def tail(*args) -> list:
         output = args[0][-5:]
         return output
     except IndexError as error:
+        logger.exception("Insuffient data to be displayed")
         return error

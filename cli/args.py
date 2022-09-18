@@ -77,6 +77,5 @@ def get_args(cli_args):
     # separate flag and fields
     flags = commands[0][0]
     fields = commands[0][1]
-    print(data, flags, fields)
 
     return data, flags, fields
