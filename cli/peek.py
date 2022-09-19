@@ -6,10 +6,6 @@ import console as con
 import functions as funcs
 from args import create_parser, get_args
 import sys
-import logging
-
-# logger object
-logger = logging.getLogger(__name__)
 
 # remove traceback from errors
 sys.tracebacklimit = 0

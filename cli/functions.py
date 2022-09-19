@@ -1,11 +1,7 @@
 #!/usr/bin/env python3
 # -*- coding:utf-8 -*-
 
-
-import logging
-
-# logger object
-logger = logging.getLogger(__name__)
+from logger import logger
 
 
 def list_of_fields(*args) -> list:
@@ -22,17 +18,19 @@ def list_of_fields(*args) -> list:
         output = [key for key in args[0][0].keys()]
 
         if len(output) > 0:
+            logger.info("Succesfully returned list of outputs")
             return output
 
         else:
-            logger.exception(
+            logger.info(
                 "No header fields could be parsed within dataset")
-            raise ValueError
+            raise ValueError("No header fields could be parsed within dataset")
 
     except KeyError:
-        logger.exception(
+        logger.info(
             "Something went wrong with loading the file for parsing")
-        raise KeyError
+        raise KeyError(
+            "Something went wrong with loading the file for parsing")
 
 
 def search(*args) -> list:
@@ -48,21 +46,24 @@ def search(*args) -> list:
     """
 
     if args[1][0] not in list_of_fields(args[0]):
-        logger.exception("Field value is not present in dataset")
-        raise ValueError
+        logger.info("Field value is not present in dataset")
+        raise ValueError("Field value is not present in dataset")
 
     try:
         output = [struct for struct in args[0]
                   if struct[args[1][0]].lower() == args[1][1].lower()]
 
         if len(output) == 0:
-            return logger.exception(
+            logger.info(
+                "There is no value matching selected filter within dataset")
+            raise IndexError(
                 "There is no value matching selected filter within dataset")
 
         else:
+            logger.info("Successfully returned hashmap of data")
             return output
     except KeyError as error:
-        logger.exception("Something went wrong")
+        logger.info(error)
         return error
 
 
@@ -78,9 +79,10 @@ def head(*args) -> list:
 
     try:
         output = args[0][:5]
+        logger.info("Sucessfully returned first 5 rows of data")
         return output
     except IndexError as error:
-        logger.exception("Insuffient data to be displayed")
+        logger.info("Insuffient data to be displayed")
         return error
 
 
@@ -96,7 +98,8 @@ def tail(*args) -> list:
 
     try:
         output = args[0][-5:]
+        logger.info("Sucessfully returned last 5 rows of data")
         return output
     except IndexError as error:
-        logger.exception("Insuffient data to be displayed")
+        logger.info("Insuffient data to be displayed")
         return error
