@@ -1,7 +1,7 @@
 import argparse
 
 
-def get_args():
+def create_parser(args):
     """
     Parse console args and return three variables
     that contain commands, flags, and additional args
@@ -58,13 +58,24 @@ def get_args():
         help="Shows preview of last 5 rows of dataset"
     )
 
-    # gather arguments and flags into variables
-    args = parser.parse_args()
-    data = args.filepath
-    commands = [tup for tup in list(
-        vars(args).items())[1:] if tup[1] is not False][0]
-    flags = commands[0]
-    fields = commands[1]
-    print(data, commands, flags, fields, sep="\n")
+    return parser.parse_args(args)
 
-    return data, commands, flags, fields
+
+def get_args(cli_args):
+
+    # data should be the filepath to dataset
+    data = cli_args.filepath
+
+    # find which flags are active
+    commands = [tup for tup in list(
+        vars(cli_args).items())[1:] if tup[1] is not False]
+
+    # if there are no commands, default to head
+    if not commands:
+        commands = [("head", True)]
+
+    # separate flag and fields
+    flags = commands[0][0]
+    fields = commands[0][1]
+
+    return data, flags, fields
